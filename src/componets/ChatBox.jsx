@@ -5,10 +5,12 @@ import { formatTimestamp } from "../utils/formatTimestand";
 import defaultAvatar from "../../public/assets/default.jpg";
 import logo from "../../public/assets/image.png";
 import { serverTimestamp } from "firebase/firestore";
+import EmojiPicker from "emoji-picker-react"; // Import Emoji Picker
 
 const ChatBox = ({ selectedUser }) => {
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState("");
+  const [showPicker, setShowPicker] = useState(false); // State for emoji picker
   const scrollRef = useRef(null);
 
   const user1 = auth.currentUser;
@@ -26,10 +28,10 @@ const ChatBox = ({ selectedUser }) => {
   // Listen for messages
   useEffect(() => {
     if (!chatId) return;
-    return listenForMessages(chatId, setMessages); // Cleanup effect
+    return listenForMessages(chatId, setMessages);
   }, [chatId]);
 
-  // Scroll to the latest message
+  // Scroll to latest message
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.lastElementChild?.scrollIntoView({ behavior: "smooth" });
@@ -61,6 +63,12 @@ const ChatBox = ({ selectedUser }) => {
     } catch (error) {
       console.error("Error sending message: ", error);
     }
+  };
+
+  // Handle adding emojis to input
+  const handleEmojiClick = (emojiObject) => {
+    setMessageText((prev) => prev + emojiObject.emoji);
+    setShowPicker(false); // Close picker after selecting emoji
   };
 
   return (
@@ -123,18 +131,37 @@ const ChatBox = ({ selectedUser }) => {
             <div className="sticky lg:bottom-0 bottom-[60px] p-3 h-fit w-full">
               <form
                 onSubmit={handleSendMessage}
-                className="flex items-center bg-white h-[45px] w-full px-2 rounded-lg shadow-lg"
+                className="flex items-center bg-white h-[45px] w-full px-2 rounded-lg shadow-lg relative"
               >
+                {/* Emoji Button */}
+                <button
+                  type="button"
+                  onClick={() => setShowPicker(!showPicker)}
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-xl"
+                >
+                  😀
+                </button>
+
+                {/* Emoji Picker */}
+                {showPicker && (
+                  <div className="absolute bottom-12 left-3 bg-white shadow-lg rounded-lg">
+                    <EmojiPicker onEmojiClick={handleEmojiClick} />
+                  </div>
+                )}
+
+                {/* Message Input */}
                 <input
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
                   type="text"
-                  className="h-full text-[#2A3D39] outline-none text-[16px] pl-3 pr-[53px] rounded-lg w-full"
+                  className="h-full text-[#2A3D39] outline-none text-[16px] pl-10 pr-[53px] rounded-lg w-full"
                   placeholder="Type a message..."
                 />
+
+                {/* Send Button */}
                 <button
                   type="submit"
-                  className="flex items-center justify-center absolute right-3 p-2 rounded-full bg-[#d9f1f2] hover:bg-[#c8eae3]"
+                  className="flex items-center justify-center absolute right-3 p-2 me-4 rounded-full bg-[#d9f1f2] hover:bg-[#c8eae3]"
                 >
                   <RiSendPlaneFill color="#01AA85" />
                 </button>
@@ -143,7 +170,7 @@ const ChatBox = ({ selectedUser }) => {
           </main>
         </section>
       ) : (
-        // Default Welcome Screen
+        
         <div className="h-screen w-full flex flex-col justify-center items-center bg-[#E6F7F8]">
           <div className="rounded-full p-6 bg-[#cccccc]">
             <img src={logo} alt="BuzzChat Logo" className="w-28 h-28" />

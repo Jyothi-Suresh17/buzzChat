@@ -37,7 +37,7 @@ function App() {
 
         {user ? (
           <div className="flex lg:flex-row flex-col items-start w-[100%]">
-            <Navlinks />
+            <Navlinks  setSelectedUser={setSelectedUser}/>
             <ChatList setSelectedUser={setSelectedUser} />
             <ChatBox selectedUser ={selectedUser} />
           </div>
