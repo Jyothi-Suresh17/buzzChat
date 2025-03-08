@@ -5,7 +5,10 @@ import { formatTimestamp } from "../utils/formatTimestand";
 import defaultAvatar from "../../public/assets/default.jpg";
 import logo from "../../public/assets/image.png";
 import { serverTimestamp } from "firebase/firestore";
-import EmojiPicker from "emoji-picker-react"; // Import Emoji Picker
+// import EmojiPicker from "emoji-picker-react"; // Import Emoji Picker
+
+const EmojiPicker = React.lazy(() => import("emoji-picker-react"));
+
 
 const ChatBox = ({ selectedUser }) => {
   const [messages, setMessages] = useState([]);
