@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   RiFolderUserLine,
   RiNotificationLine,
@@ -9,8 +9,11 @@ import { auth } from "../firebase/firebase";
 import toast from "react-hot-toast";
 import image from "../../public/assets/image.png"; // Adjust path if needed
 import SearchModel from "./SearchModel";
+import Profile from "./Profile"; // Import the Profile component
 
 const Navlinks = ({ setSelectedUser }) => {
+  const [showProfile, setShowProfile] = useState(false);
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -45,7 +48,10 @@ const Navlinks = ({ setSelectedUser }) => {
           {/* Icons at the start */}
           <div className="flex items-center gap-8 lg:flex-col lg:gap-10">
             <li>
-              <button className="text-[20px] lg:text-[28px] cursor-pointer">
+              <button
+                className="text-[20px] lg:text-[28px] cursor-pointer"
+                onClick={() => setShowProfile(true)}
+              >
                 <RiFolderUserLine color="#fff" />
               </button>
             </li>
@@ -76,6 +82,17 @@ const Navlinks = ({ setSelectedUser }) => {
           </li>
         </ul>
       </section>
+
+      {/* Show Profile Component in a Modal */}
+      {showProfile && (
+        <div className="fixed inset-0 bg-[#c8eef7b7] bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-[#e1faff] p-6 rounded-lg shadow-lg w-80">
+            <Profile   setShowProfile={setShowProfile}/>
+            
+           
+          </div>
+        </div>
+      )}
     </>
   );
 };

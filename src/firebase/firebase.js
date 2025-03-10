@@ -10,7 +10,7 @@ import {
   updateDoc, 
   addDoc 
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, updatePassword, updateProfile } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDopigIzbGpt06zBwwXkUMXBT3DH09emTw",
@@ -123,6 +123,17 @@ export const listenForMessages = (chatId, setMessages) => {
   });
 
   return unsubscribe; // ✅ Cleanup when component unmounts
+};
+
+//for profile
+
+export const updateUserProfile = (user, data) => {
+  return updateProfile(user, data);
+};
+
+// Update password
+export const updateUserPassword = (user, newPassword) => {
+  return updatePassword(user, newPassword);
 };
 
 export { auth, db };

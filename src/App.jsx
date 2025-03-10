@@ -34,24 +34,33 @@ function App() {
     <>
       <div>
         <Toaster position="top-center" reverseOrder={false} />
-
+  
         {user ? (
-          <div className="flex lg:flex-row flex-col items-start w-[100%]">
-            <Navlinks  setSelectedUser={setSelectedUser}/>
-            <ChatList setSelectedUser={setSelectedUser} />
-            <ChatBox selectedUser ={selectedUser} />
+          <div className="flex h-screen w-full">
+            {/* Sidebar Navigation */}
+            <Navlinks setSelectedUser={setSelectedUser} className="h-screen" />
+  
+            {/* Chat List */}
+            <ChatList setSelectedUser={setSelectedUser} className="h-screen " />
+  
+            {/* Chat Box (Only this should scroll) */}
+            <div className="flex flex-col flex-grow h-screen overflow-hidden">
+              <ChatBox selectedUser={selectedUser} className="flex-1 overflow-y-auto" />
+            </div>
           </div>
         ) : (
-          <div >
-            {isLogin? <Login isLogin={isLogin} setIsLogin={setIsLogin} />  : <Register  isLogin={isLogin} setIsLogin={setIsLogin} /> } 
-            {/* uses prop drilling to pass data */}
-           
-            
+          <div>
+            {isLogin ? (
+              <Login isLogin={isLogin} setIsLogin={setIsLogin} />
+            ) : (
+              <Register isLogin={isLogin} setIsLogin={setIsLogin} />
+            )}
           </div>
         )}
       </div>
     </>
   );
+  
 }
 
 export default App;
